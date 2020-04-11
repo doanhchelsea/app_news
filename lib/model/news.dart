@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:appnews/global.dart';
+import 'package:appnews/utils/global.dart';
 import 'package:flutter/foundation.dart';
+
 
 class News {
   final String id;
@@ -39,6 +40,7 @@ class News {
 }
 
 Future<List<News>> fetchNews(http.Client client) async {
+  const URL_NEWS = URL+ '/get_arc_by_catid?catid=2';
   final response = await client.get(URL_NEWS);
   return compute(parseNews, response.body);
 }
