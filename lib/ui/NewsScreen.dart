@@ -1,3 +1,8 @@
+import 'package:appnews/data/culturalnews.dart';
+import 'package:appnews/data/economynews.dart';
+import 'package:appnews/data/sciencenews.dart';
+import 'package:appnews/data/societynews.dart';
+import 'package:appnews/data/worldnews.dart';
 import 'package:appnews/ui/DetailNewsScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,66 +12,7 @@ import 'package:http/http.dart' as http;
 import '../model/news.dart';
 import '../ui/DetailNewsScreen.dart';
 
-class NewsList extends StatelessWidget {
-  final List<News> news;
 
-  NewsList({Key key, this.news}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      itemBuilder: (context, index) {
-        return GestureDetector(
-          child: Container(
-            padding: EdgeInsets.all(8.0),
-            child: new Row(
-              children: <Widget>[
-                new Expanded(
-                  flex: 1,
-                  child: new Column(
-                    children: <Widget>[
-                      new Image.network(news[index].thumb),
-                    ],
-                  ),
-                ),
-                new Container(
-                  width: 10.0,
-                ),
-                new Expanded(
-                    flex: 3,
-                    child: new Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        new Text(news[index].title,
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 16.0)),
-                        new Text(""),
-                        new Text(
-                          news[index].source,
-                          style: TextStyle(color: Colors.black26),
-                        ),
-                      ],
-                    )),
-              ],
-            ),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.black12),
-            ),
-          ),
-          onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        DetailNewsScreen(newsId: news[index].id)));
-          },
-        );
-      },
-      itemCount: news.length,
-    );
-  }
-}
 
 class NewScreen extends StatefulWidget {
   @override
@@ -93,7 +39,7 @@ class _NewScreenSate extends State<NewScreen> {
               Tab(
                 child: Container(
                   child: Text(
-                    'HOME',
+                    'XÃ HỘI',
                     style: TextStyle(color: Colors.white, fontSize: 18.0),
                   ),
                 ),
@@ -101,7 +47,7 @@ class _NewScreenSate extends State<NewScreen> {
               Tab(
                 child: Container(
                   child: Text(
-                    'GAMES',
+                    'THẾ GIỚI',
                     style: TextStyle(color: Colors.white, fontSize: 18.0),
                   ),
                 ),
@@ -109,7 +55,7 @@ class _NewScreenSate extends State<NewScreen> {
               Tab(
                 child: Container(
                   child: Text(
-                    'MOVIES',
+                    'KINH TẾ',
                     style: TextStyle(color: Colors.white, fontSize: 18.0),
                   ),
                 ),
@@ -117,7 +63,7 @@ class _NewScreenSate extends State<NewScreen> {
               Tab(
                 child: Container(
                   child: Text(
-                    'BOOK',
+                    'KHOA HỌC',
                     style: TextStyle(color: Colors.white, fontSize: 18.0),
                   ),
                 ),
@@ -125,7 +71,7 @@ class _NewScreenSate extends State<NewScreen> {
               Tab(
                 child: Container(
                   child: Text(
-                    'MUSIC',
+                    'VĂN HÓA',
                     style: TextStyle(color: Colors.white, fontSize: 18.0),
                   ),
                 ),
@@ -136,10 +82,10 @@ class _NewScreenSate extends State<NewScreen> {
         body: TabBarView(
           children: <Widget>[
             SocietyNews(),
-            SocietyNews(),
-            SocietyNews(),
-            SocietyNews(),
-            SocietyNews(),
+            WorldNews(),
+            EconomyNews(),
+            ScienceNews(),
+            CulturalNews(),
           ],
         ),
         drawer: Drawer(
@@ -168,21 +114,6 @@ class _NewScreenSate extends State<NewScreen> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget SocietyNews() {
-    return Scaffold(
-      body: FutureBuilder(
-          future: fetchNews(http.Client()),
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              print(snapshot.error);
-            }
-            return snapshot.hasData
-                ? NewsList(news: snapshot.data)
-                : Center(child: CircularProgressIndicator());
-          }),
     );
   }
 }

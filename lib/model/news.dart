@@ -1,8 +1,5 @@
-import 'dart:async';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-import 'package:appnews/utils/global.dart';
-import 'package:flutter/foundation.dart';
+
+
 
 
 class News {
@@ -39,13 +36,4 @@ class News {
   }
 }
 
-Future<List<News>> fetchNews(http.Client client) async {
-  const URL_NEWS = URL+ '/get_arc_by_catid?catid=2';
-  final response = await client.get(URL_NEWS);
-  return compute(parseNews, response.body);
-}
 
-List<News> parseNews(String responseBody) {
-  final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
-  return parsed.map<News>((json) => News.fromJson(json)).toList();
-}
