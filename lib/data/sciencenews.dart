@@ -96,7 +96,7 @@ class NewsList extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
-                        DetailNewsScreen(newsId: news[index].id)));
+                        DetailNewsScreen(newsId: int.parse(news[index].id))));
           },
         );
       },

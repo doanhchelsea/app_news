@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 
 Future<List<News>> fetchNews(http.Client client) async {
   const URL_NEWS = URL + '/get_arc_by_catid?catid=2';
+
   final response = await client.get(URL_NEWS);
   return compute(parseNews, response.body);
 }
@@ -17,6 +18,7 @@ List<News> parseNews(String responseBody) {
   final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
   return parsed.map<News>((json) => News.fromJson(json)).toList();
 }
+
 
 class SocietyNews extends StatefulWidget {
   final Widget child;
@@ -37,9 +39,7 @@ class _SocietyNewsState extends State<SocietyNews> {
             if (snapshot.hasError) {
               print(snapshot.error);
             }
-            return snapshot.hasData
-                ? NewsList(news: snapshot.data)
-                : Center(child: CircularProgressIndicator());
+            return snapshot.hasData ? NewsList(news: snapshot.data) : Center(child: CircularProgressIndicator());
           }),
     );
   }
@@ -97,7 +97,7 @@ class NewsList extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
-                        DetailNewsScreen(newsId: news[index].id)));
+                        DetailNewsScreen(newsId: int.parse(news[index].id))));
           },
         );
       },
