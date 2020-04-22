@@ -1,119 +1,109 @@
-import 'package:appnews/data/culturalnews.dart';
-import 'package:appnews/data/economynews.dart';
-import 'package:appnews/data/sciencenews.dart';
-import 'package:appnews/data/societynews.dart';
-import 'package:appnews/data/worldnews.dart';
+import 'dart:convert';
+import 'package:appnews/model/news.dart';
 import 'package:appnews/ui/DetailNewsScreen.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:appnews/utils/global.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter/cupertino.dart';
 
-import '../model/news.dart';
-import '../ui/DetailNewsScreen.dart';
+Future<List<News>> fetchNews(int id) async {
+  final URL_NEWS = URL + '/get_arc_by_catid?catid=${id}';
 
-
-
-class NewScreen extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    return _NewScreenSate();
-  }
+  final response = await http.get(URL_NEWS);
+  return compute(parseNews, response.body);
 }
 
-class _NewScreenSate extends State<NewScreen> {
+List<News> parseNews(String responseBody) {
+  final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
+  return parsed.map<News>((json) => News.fromJson(json)).toList();
+}
+
+class NewsScreen extends StatefulWidget {
+  final Widget child;
+  final int id;
+
+  NewsScreen(this.id, {Key key, this.child}) : super(key: key);
+
+  _NewsScreenState createState() => _NewsScreenState();
+}
+
+class _NewsScreenState extends State<NewsScreen> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return DefaultTabController(
-      length: 5,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text("VNEXPRESS NEWS"),
-          bottom: TabBar(
-            isScrollable: true,
-            indicatorColor: Colors.white,
-            indicatorWeight: 6.0,
-            tabs: <Widget>[
-              Tab(
-                child: Container(
-                  child: Text(
-                    'XÃ HỘI',
-                    style: TextStyle(color: Colors.white, fontSize: 18.0),
+    return Scaffold(
+      body: FutureBuilder(
+          future: fetchNews(widget.id),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              print(snapshot.error);
+            }
+            return snapshot.hasData
+                ? NewsList(news: snapshot.data)
+                : Center(child: CircularProgressIndicator());
+          }),
+    );
+  }
+}
+
+class NewsList extends StatelessWidget {
+  final List<News> news;
+
+  NewsList({Key key, this.news}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemBuilder: (context, index) {
+        return GestureDetector(
+          child: Container(
+            padding: EdgeInsets.all(8.0),
+            child: new Row(
+              children: <Widget>[
+                new Expanded(
+                  flex: 1,
+                  child: new Column(
+                    children: <Widget>[
+                      new Image.network(news[index].thumb),
+                    ],
                   ),
                 ),
-              ),
-              Tab(
-                child: Container(
-                  child: Text(
-                    'THẾ GIỚI',
-                    style: TextStyle(color: Colors.white, fontSize: 18.0),
-                  ),
+                new Container(
+                  width: 10.0,
                 ),
-              ),
-              Tab(
-                child: Container(
-                  child: Text(
-                    'KINH TẾ',
-                    style: TextStyle(color: Colors.white, fontSize: 18.0),
-                  ),
-                ),
-              ),
-              Tab(
-                child: Container(
-                  child: Text(
-                    'KHOA HỌC',
-                    style: TextStyle(color: Colors.white, fontSize: 18.0),
-                  ),
-                ),
-              ),
-              Tab(
-                child: Container(
-                  child: Text(
-                    'VĂN HÓA',
-                    style: TextStyle(color: Colors.white, fontSize: 18.0),
-                  ),
-                ),
-              ),
-            ],
+                new Expanded(
+                    flex: 3,
+                    child: new Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        new Text(news[index].title,
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600, fontSize: 16.0)),
+                        new Text(""),
+                        new Text(
+                          news[index].source,
+                          style: TextStyle(color: Colors.black26),
+                        ),
+                      ],
+                    )),
+              ],
+            ),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.black12),
+            ),
           ),
-        ),
-        body: TabBarView(
-          children: <Widget>[
-            SocietyNews(),
-            WorldNews(),
-            EconomyNews(),
-            ScienceNews(),
-            CulturalNews(),
-          ],
-        ),
-        drawer: Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: <Widget>[
-              DrawerHeader(
-                child: Text('Drawer Header'),
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                ),
-              ),
-              ListTile(
-                title: Text('Home'),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                title: Text('Item 2'),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        DetailNewsScreen(newsId: int.parse(news[index].id))));
+          },
+        );
+      },
+      itemCount: news.length,
     );
   }
 }

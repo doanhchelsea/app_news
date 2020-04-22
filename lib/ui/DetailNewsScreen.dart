@@ -4,6 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:http/http.dart' as http;
 
+
+Future<String> fetchURL(int id) async {
+  final String URL_NEWS =
+      URL + '/get_noi_dung_tin_new?arcid=${id}';
+  var response = await http.get(URL_NEWS);
+
+  return response.body;
+}
 class DetailNewsScreen extends StatefulWidget  {
   final int newsId;
 
@@ -17,17 +25,11 @@ class DetailNewsScreen extends StatefulWidget  {
 }
 
 class _DetailScreenState extends State<DetailNewsScreen>  {
-  Future<String> fetchURL() async {
-    final String URL_NEWS =
-        URL + '/get_noi_dung_tin_new?arcid=${widget.newsId}';
-    var response = await http.get(URL_NEWS);
 
-    return response.body;
-  }
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<String>(
-      future: fetchURL(),
+      future: fetchURL(widget.newsId),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Scaffold(

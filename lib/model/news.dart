@@ -1,7 +1,6 @@
 
 
 
-
 class News {
   final String id;
   final String thumb;
@@ -24,14 +23,14 @@ class News {
 
   factory News.fromJson(Map<String, dynamic> json) {
     return News(
-      id: json["id"] as String,
-      thumb: json["thumb"] as String,
-      title: json["title"] as String,
-      source: json["source"] as String,
-      publishedDate: json["publishedDate"] as String,
-      catid: json["catid"] as String,
-      rid: json["rid"] as String,
-      nextpage: json["nextpage"] as int,
+      id: json["id"] ,
+      thumb: json["thumb"] ,
+      title: json["title"] ,
+      source: json["source"] ,
+      publishedDate: json["publishedDate"] ,
+      catid: json["catid"] ,
+      rid: json["rid"] ,
+      nextpage: json["nextpage"] ,
     );
   }
 }

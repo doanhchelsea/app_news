@@ -1,6 +1,5 @@
-
+import 'package:appnews/ui/HomeScreen.dart';
 import 'package:flutter/material.dart';
-import 'package:appnews/ui/NewsScreen.dart';
 
 void main() => runApp(MyApp());
 
