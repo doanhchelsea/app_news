@@ -81,10 +81,16 @@ class NewsList extends StatelessWidget {
                         new Text(news[index].title,
                             style: TextStyle(
                                 fontWeight: FontWeight.w600, fontSize: 16.0)),
-                        new Text(""),
-                        new Text(
-                          news[index].source,
-                          style: TextStyle(color: Colors.black26),
+                        new Row(
+                          children: <Widget>[
+                            new Text(
+                              news[index].source,
+                              style: TextStyle(color: Colors.black26),
+                            ),
+                            new Text("   "),
+                            new Icon(Icons.insert_comment),
+                            new Text('13'),
+                          ],
                         ),
                       ],
                     )),

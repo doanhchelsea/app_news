@@ -32,7 +32,6 @@ class _NewScreenSate extends State<NewScreen>
   void dispose() {
     super.dispose();
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,17 +76,17 @@ class _NewScreenSate extends State<NewScreen>
                       ),
                     ),
                     ListTile(
-                      title: Text('Home'),
+                      title: Text('Test'),
                       onTap: () {
-                        Navigator.pop(context);
+
                       },
                     ),
-                    ListTile(
-                      title: Text('Item 2'),
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                    ),
+//                    ListTile(
+//                      title: Text('Item 2'),
+//                      onTap: () {
+//                        Navigator.pop(context);
+//                      },
+//                    ),
                   ],
                 ),
               ),
